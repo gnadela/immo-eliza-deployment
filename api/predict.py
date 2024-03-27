@@ -14,8 +14,6 @@ def preprocess_input(data):
     # Preprocess input data
     input_data["postal_zone"] = input_data["postal_zone"].astype(int)  # Convert postal_zone to int
     input_data = input_data.drop(columns=["zip_code"])  # Remove zip_code column
-    # Add missing "postal_zone_3000" column filled with zeros
-    input_data["postal_zone_3000"] = 0
 
     return input_data
 
@@ -38,7 +36,4 @@ def predict(data):
 
     return predictions.tolist()
 
-def get_feature_order():
-    # Get feature names from the trained XGBoost model
-    feature_order = model.get_booster().feature_names
-    return feature_order
+

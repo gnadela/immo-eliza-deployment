@@ -1,8 +1,6 @@
-# app.py
-
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
-from predict import predict, get_feature_order
+from predict import predict
 
 app = FastAPI()
 
@@ -26,7 +24,7 @@ class PropertyInput(BaseModel):
     terrace_sqm: float
     fl_garden: int
     garden_sqm: float
-    fl_swimming_pool: int
+    fl_swimming_pool: int 
     fl_floodzone: int
     state_building: str
     primary_energy_consumption_sqm: float
@@ -37,7 +35,7 @@ class PropertyInput(BaseModel):
 
 @app.get("/")
 async def root():
-    return {"message": "alive"}
+    return {"message": "I am alive"}
 
 @app.post("/predict/")
 async def predict_price(data: PropertyInput):
@@ -48,11 +46,15 @@ async def predict_price(data: PropertyInput):
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
-@app.get("/feature_order")
-async def get_features():
-    try:
+#@app.get("/feature_order")
+#async def get_features():
+#    try:
         # Call the get_feature_order function from predict.py
-        features = get_feature_order()
-        return {"feature_order": features}
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+#        features = get_feature_order()
+#        return {"feature_order": features}
+#    except Exception as e:
+#        raise HTTPException(status_code=500, detail=str(e))
+
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run(app, host="127.0.0.1", port=8000)
