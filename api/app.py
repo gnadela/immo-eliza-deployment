@@ -1,8 +1,11 @@
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Request
+from fastapi.responses import HTMLResponse
+from fastapi.templating import Jinja2Templates
 from pydantic import BaseModel
 from predict import predict
 
 app = FastAPI()
+templates = Jinja2Templates(directory="templates")
 
 class PropertyInput(BaseModel):
     total_area_sqm: float
@@ -11,8 +14,6 @@ class PropertyInput(BaseModel):
     province: str
     locality: str
     zip_code: str
-    latitude: float
-    longitude: float
     construction_year: float
     surface_land_sqm: float
     nbr_frontages: float
@@ -31,29 +32,48 @@ class PropertyInput(BaseModel):
     epc: str
     heating_type: str
     fl_double_glazing: int
-    postal_zone: str
 
-@app.get("/")
-async def root():
-    return {"message": "I am alive"}
+# Define pre-filled data outside of any function
+pre_filled_data = PropertyInput(
+    total_area_sqm=100,
+    property_type="APARTMENT",
+    subproperty_type="APARTMENT",
+    province="Flemish Brabant",
+    locality="Leuven",
+    zip_code="3000",
+    construction_year=2000,
+    surface_land_sqm=150,
+    nbr_frontages=2,
+    nbr_bedrooms=2,
+    equipped_kitchen="INSTALLED",
+    fl_furnished=1,
+    fl_open_fire=0,
+    fl_terrace=1,
+    terrace_sqm=20,
+    fl_garden=1,
+    garden_sqm=50,
+    fl_swimming_pool=0,
+    fl_floodzone=0,
+    state_building="GOOD",
+    primary_energy_consumption_sqm=150,
+    epc="C",
+    heating_type="GAS",
+    fl_double_glazing=1
+)
 
-@app.post("/predict/")
-async def predict_price(data: PropertyInput):
+@app.get("/", response_class=HTMLResponse)
+async def read_root(request: Request):
+    print("pre_filled_data:", pre_filled_data)  # Add this line for debugging
+    return templates.TemplateResponse("index.html", {"request": request, "data": pre_filled_data})
+
+@app.post("/predict/", response_class=HTMLResponse)
+async def predict_price(request: Request, data: PropertyInput):
     try:
         # Call the predict function from predict.py
-        prediction = predict(data.dict())
-        return {"predictions": prediction}
+        prediction = predict(data)
+        return templates.TemplateResponse("prediction_result.html", {"request": request, "prediction": prediction})
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
-
-#@app.get("/feature_order")
-#async def get_features():
-#    try:
-        # Call the get_feature_order function from predict.py
-#        features = get_feature_order()
-#        return {"feature_order": features}
-#    except Exception as e:
-#        raise HTTPException(status_code=500, detail=str(e))
 
 if __name__ == "__main__":
     import uvicorn
