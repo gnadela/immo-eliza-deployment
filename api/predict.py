@@ -34,9 +34,10 @@ def predict(data):
         input_data_encoded = input_data_encoded.reindex(columns=all_features, fill_value=0)
 
         # Make predictions
-        predictions = model.predict(input_data_encoded)
+        prediction = model.predict(input_data_encoded)
 
-        return predictions.tolist()
+        return prediction.tolist()
+    #    return prediction
     except Exception as e:
         raise ValueError(str(e))
 

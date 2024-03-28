@@ -1,0 +1,4 @@
+fastapi
+pedantic
+pickle
+pandas
