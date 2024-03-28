@@ -1,4 +1,5 @@
 import pickle
+import xgboost
 import pandas as pd
 
 # Load the trained model
