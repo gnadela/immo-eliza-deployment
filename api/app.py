@@ -3,8 +3,18 @@
 from fastapi import FastAPI
 from pydantic import BaseModel
 from predict import predict
+from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
+
+# Add CORS middleware
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Allow requests from any origin (replace "*" with your domain if deploying)
+    allow_credentials=True,
+    allow_methods=["GET", "POST"],
+    allow_headers=["*"],
+)
 
 class PropertyInput(BaseModel):
     total_area_sqm: float
