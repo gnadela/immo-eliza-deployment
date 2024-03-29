@@ -37,6 +37,6 @@ async def predict_price(data:PropertyInput):
         prediction = predict(data)
         return {'prediction': prediction}
 
-if __name__ == "__main__":
-    import uvicorn
-    uvicorn.run(app, host="127.0.0.1", port=8000)
+#if __name__ == "__main__":
+#    import uvicorn
+#    uvicorn.run(app, host="127.0.0.1", port=8000)
