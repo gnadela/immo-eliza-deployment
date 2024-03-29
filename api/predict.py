@@ -1,16 +1,10 @@
 # predict.py
 
-import os
 import pickle
 import pandas as pd
-import xgboost
-
-# Construct the path to trained_model.pkl
-current_dir = os.path.dirname(__file__)
-model_path = os.path.join(current_dir, "trained_model.pkl")
 
 # Load the trained model
-with open(model_path, "rb") as f:
+with open("../model/trained_model.pkl", "rb") as f:
     model = pickle.load(f)
 
 def preprocess_input(data):
@@ -45,7 +39,6 @@ def predict(data):
         prediction = model.predict(input_data_encoded)
 
         return prediction.tolist()
-    #    return prediction
+     #   return prediction
     except Exception as e:
         raise ValueError(str(e))
-
