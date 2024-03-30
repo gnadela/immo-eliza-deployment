@@ -30,6 +30,10 @@ class PropertyInput(BaseModel):
     heating_type: str
     fl_double_glazing: int
 
+@app.get('/')
+def root():
+    return 'hello'
+
 @app.post("/predict/")
 async def predict_price(data: PropertyInput):
     prediction = predict(data)
