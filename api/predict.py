@@ -1,5 +1,3 @@
-# predict.py
-
 import pickle
 import pandas as pd
 
@@ -20,6 +18,8 @@ def predict(data):
     try:
         # Preprocess input data
         input_data = preprocess_input(data)
+
+        # Make zip_code a categorical value
         input_data['zip_code'] = input_data['zip_code'].astype('category')
 
         # Define categorical columns
@@ -38,7 +38,8 @@ def predict(data):
         # Make predictions
         prediction = model.predict(input_data_encoded)
 
-        return prediction.tolist()
-     #   return prediction
+#        return predictions.tolist()
+        print('prediction type', type(prediction))
+        return prediction
     except Exception as e:
         raise ValueError(str(e))
