@@ -1,9 +1,5 @@
 import streamlit as st
 import requests
-import logging
-
-# Set up logging
-logging.basicConfig(level=logging.INFO)
 
 # Define URL of the FastAPI server
 FASTAPI_URL = "http://localhost:8000/predict"
@@ -36,24 +32,12 @@ pre_filled_data = {
     "fl_double_glazing": st.sidebar.checkbox('Double Glazing')
 }
 
-try:
-    # Send pre-filled data to FastAPI server for prediction
-    response = requests.post(FASTAPI_URL, json=pre_filled_data)
+# Send pre-filled data to FastAPI server for prediction
+response = requests.post(FASTAPI_URL, json=pre_filled_data)
 
-    # Log the URL used for the POST request
-    logging.info(f"POST request sent to: {FASTAPI_URL}")
+# Get the predicted price from the response
+predicted_price = response.json()[0]
 
-    # Check if request was successful
-    if response.status_code == 200:
-        # Get the predicted price from the response
-        predicted_price = response.json()["prediction"][0]
-        predicted_price_formatted = "€ {:,.2f} ".format(predicted_price)
-        st.write("Predicted Price:", predicted_price_formatted)
-    else:
-        st.error(f"Failed to predict price. Error: {response.text}")
-        # Log the error message
-        logging.error(f"Failed to predict price. Error: {response.text}")
-except requests.ConnectionError as e:
-    st.error(f"Failed to connect to the server. Please check your internet connection and try again.")
-    # Log the connection error
-    logging.error(f"Failed to connect to the server. Error: {e}")
+predicted_price_formatted = "€ {:,.2f} ".format(predicted_price)
+st.write("Predicted Price:", predicted_price_formatted)
+  

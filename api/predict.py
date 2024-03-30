@@ -2,44 +2,31 @@ import pickle
 import pandas as pd
 
 # Load the trained model
-with open("../model/trained_model.pkl", "rb") as f:
+with open("trained_model.pkl", "rb") as f:
     model = pickle.load(f)
 
 def preprocess_input(data):
-    # Convert PropertyInput object to a dictionary
     data_dict = data.dict()
+    df = pd.DataFrame([data_dict])
 
-    # Convert the dictionary to a DataFrame
-    data_df = pd.DataFrame([data_dict])
+    # convert zip code into categorical data
+    df = df['zip_code'].astype('category')
 
-    return data_df
+    categorical_cols = ["property_type", "subproperty_type", "province", "locality", 
+                        "equipped_kitchen", "state_building", "epc", "heating_type", "zip_code"]
+
+    # one-hot-encoding
+    df_encoded = pd.get_dummies(df, columns=categorical_cols)
+
+    all_features = model.get_booster().feature_names
+
+    # fill blanks
+    df_encoded = df_encoded.reindex(columns=all_features, fill_value=0)
+
+    return df_encoded
 
 def predict(data):
-    try:
-        # Preprocess input data
-        input_data = preprocess_input(data)
+    input_data = preprocess_input(data)
+    prediction = model.predict(input_data)
 
-        # Make zip_code a categorical value
-        input_data['zip_code'] = input_data['zip_code'].astype('category')
-
-        # Define categorical columns
-        categorical_cols = ["property_type", "subproperty_type", "province", "locality", 
-                            "equipped_kitchen", "state_building", "epc", "heating_type", "zip_code"]
-
-        # Perform one-hot encoding for categorical variables
-        input_data_encoded = pd.get_dummies(input_data, columns=categorical_cols)
-
-        # Get all possible feature names based on preprocessing
-        all_features = model.get_booster().feature_names
-
-        # Ensure input data has all possible features, filling missing columns with zeros
-        input_data_encoded = input_data_encoded.reindex(columns=all_features, fill_value=0)
-
-        # Make predictions
-        prediction = model.predict(input_data_encoded)
-
-#        return predictions.tolist()
-        print('prediction type', type(prediction))
-        return prediction
-    except Exception as e:
-        raise ValueError(str(e))
+    return prediction
