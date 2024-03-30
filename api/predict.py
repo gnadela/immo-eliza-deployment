@@ -2,7 +2,7 @@ import pickle
 import pandas as pd
 
 # Load the trained model
-with open("../model/trained_model.pkl", "rb") as f:
+with open("trained_model.pkl", "rb") as f:
     model = pickle.load(f)
 
 def preprocess_input(data):
