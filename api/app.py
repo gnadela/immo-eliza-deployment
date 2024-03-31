@@ -32,7 +32,7 @@ class PropertyInput(BaseModel):
 
 @app.get('/')
 def root():
-    return 'hello'
+    return 'Immo Eliza Prediction Site'
 
 @app.post("/predict/")
 async def predict_price(data: PropertyInput):
