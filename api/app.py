@@ -1,20 +1,8 @@
-# app.py
-
 from fastapi import FastAPI
 from pydantic import BaseModel
 from predict import predict
-from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
-
-# Add CORS middleware
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],  # Allow requests from any origin (replace "*" with your domain if deploying)
-    allow_credentials=True,
-    allow_methods=["GET", "POST"],
-    allow_headers=["*"],
-)
 
 class PropertyInput(BaseModel):
     total_area_sqm: float
@@ -42,11 +30,15 @@ class PropertyInput(BaseModel):
     heating_type: str
     fl_double_glazing: int
 
-@app.post("/predict")
-async def predict_price(data:PropertyInput):
-        prediction = predict(data)
-        return {'prediction': prediction}
+@app.get('/')
+def root():
+    return 'Immo Eliza Prediction Site'
 
-#if __name__ == "__main__":
-#    import uvicorn
-#    uvicorn.run(app, host="127.0.0.1", port=8000)
+@app.post("/predict/")
+async def predict_price(data: PropertyInput):
+    prediction = predict(data)
+
+    # Convert NumPy array to list for JSON serialization
+    prediction = prediction.tolist()
+
+    return prediction

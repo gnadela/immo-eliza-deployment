@@ -1,10 +1,8 @@
-# predict.py
-
 import pickle
 import pandas as pd
 
 # Load the trained model
-with open("../model/trained_model.pkl", "rb") as f:
+with open("trained_model.pkl", "rb") as f:
     model = pickle.load(f)
 
 def preprocess_input(data):
@@ -12,33 +10,32 @@ def preprocess_input(data):
     data_dict = data.dict()
 
     # Convert the dictionary to a DataFrame
-    data_df = pd.DataFrame([data_dict])
+    df = pd.DataFrame([data_dict])
 
-    return data_df
+    # Make zip_code a categorical value
+    df['zip_code'] = df['zip_code'].astype('category')
+
+    # Define categorical columns
+    categorical_cols = ["property_type", "subproperty_type", "province", "locality", 
+                        "equipped_kitchen", "state_building", "epc", "heating_type", "zip_code"]
+
+    # Perform one-hot encoding for categorical variables
+    df_encoded = pd.get_dummies(df, columns=categorical_cols)
+
+    return df_encoded
 
 def predict(data):
-    try:
-        # Preprocess input data
-        input_data = preprocess_input(data)
-        input_data['zip_code'] = input_data['zip_code'].astype('category')
+    # Preprocess input data
+    input_data = preprocess_input(data)
 
-        # Define categorical columns
-        categorical_cols = ["property_type", "subproperty_type", "province", "locality", 
-                            "equipped_kitchen", "state_building", "epc", "heating_type", "zip_code"]
+    # Get all possible feature names based on preprocessing
+    all_features = model.get_booster().feature_names
 
-        # Perform one-hot encoding for categorical variables
-        input_data_encoded = pd.get_dummies(input_data, columns=categorical_cols)
+    # Ensure input data has all possible features, filling missing columns with zeros
+    input_data_encoded = input_data.reindex(columns=all_features, fill_value=0)
 
-        # Get all possible feature names based on preprocessing
-        all_features = model.get_booster().feature_names
+    # Make predictions
+    prediction = model.predict(input_data_encoded)
 
-        # Ensure input data has all possible features, filling missing columns with zeros
-        input_data_encoded = input_data_encoded.reindex(columns=all_features, fill_value=0)
-
-        # Make predictions
-        prediction = model.predict(input_data_encoded)
-
-        return prediction.tolist()
-     #   return prediction
-    except Exception as e:
-        raise ValueError(str(e))
+    return prediction
+  
