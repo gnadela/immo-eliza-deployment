@@ -1,5 +1,6 @@
 # Use the official Python image as a base image
 FROM python:3.9-slim
+# FROM python:3.11-slim-bookworm
 
 # Set the working directory inside the container
 WORKDIR /api
