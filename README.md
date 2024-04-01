@@ -59,9 +59,10 @@ http://127.0.0.1:8000/
 ```
 ### Docker
 
-Access the API from Docker Hub:
+Alternatively, you can run FastAPI from a Docker container.
 ```
- https://hub.docker.com/repository/docker/gnadela/elated_tharp/general
+docker build -t fastapi-app .
+docker run -d -p 8080:80 fastapi-app
 ```
 ### Streamlit
 To run Streamlit:
