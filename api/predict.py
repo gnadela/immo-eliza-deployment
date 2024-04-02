@@ -1,5 +1,10 @@
 import pickle
 import pandas as pd
+import os
+
+# Get the directory of the current script (predict.py)
+script_dir = os.path.dirname(os.path.realpath(__file__))
+model_path = os.path.join(script_dir, 'trained_model.pkl')
 
 # Load the trained model
 with open("trained_model.pkl", "rb") as f:

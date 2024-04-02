@@ -1,6 +1,11 @@
 from fastapi import FastAPI
 from pydantic import BaseModel
-from predict import predict
+import os
+
+if os.environ.get('DOCKER_ENV') == 'True':
+    from .predict import predict  # Inside Docker container
+else:
+    from predict import predict  # Outside Docker container
 
 app = FastAPI()
 
