@@ -1,4 +1,8 @@
 import streamlit as st
+import requests
+
+# Define URL of the FastAPI server
+FASTAPI_URL = "http://localhost:8000/predict"
 
 # Define pre-filled data dictionary
 pre_filled_data = {
@@ -28,5 +32,13 @@ pre_filled_data = {
     "fl_double_glazing": st.sidebar.checkbox('Double Glazing')
 }
 
-# Display pre-filled data
-st.write("Pre-filled data:", pre_filled_data)
+# Send pre-filled data to FastAPI server for prediction
+try:
+    response = requests.post(FASTAPI_URL, json=pre_filled_data)
+    response.raise_for_status()
+    response_json = response.json()
+    predicted_price = response_json['prediction']
+    predicted_price_formatted = "€ {:,.2f} ".format(predicted_price)
+    st.write("Predicted Price:", predicted_price_formatted)
+except requests.exceptions.RequestException as e:
+    st.error(f"Error occurred: {e}")
