@@ -1,11 +1,6 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
-import os
-
-if os.environ.get('DOCKER_ENV') == 'True':
-    from .predict import predict  # Inside Docker container
-else:
-    from predict import predict  # Outside Docker container
+from predict import predict
 
 app = FastAPI()
 
@@ -46,4 +41,13 @@ async def predict_price(data: PropertyInput):
     # Convert NumPy array to list for JSON serialization
     prediction = prediction.tolist()
 
-    return prediction
+    # Define status code
+    status_code = 200  # Success status code
+
+    # Create dictionary with prediction and status code
+    output = {
+        "prediction": prediction[0],  # Accessing the first element of the list
+        "status_code": status_code
+    }
+
+    return output  

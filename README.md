@@ -50,7 +50,6 @@ pip install -r requirements.txt
 Run FastAPI:
 ```
 cd api
-python app.py 
 uvicorn app:app --reload
 ```
 The API can now be accessed from:
@@ -65,7 +64,7 @@ docker build -t fastapi-app .
 docker run -d -p 8080:80 fastapi-app
 ```
 ### Streamlit
-To run Streamlit:
+To run Streamlit, make sure that FastAPI is running. Rrom a new terminal:
 ```
 cd streamlit
 streamlit run streamlit_app.py
