@@ -1,5 +1,10 @@
 import pickle
 import pandas as pd
+import os
+
+# Get the absolute path to the directory containing the current script
+current_dir = os.path.dirname(os.path.abspath(__file__))
+model_file_path = os.path.join(current_dir, "trained_model.pkl")
 
 # Load the trained model
 with open("trained_model.pkl", "rb") as f:
