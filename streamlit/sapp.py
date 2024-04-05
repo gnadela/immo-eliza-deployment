@@ -34,9 +34,17 @@ def get_prediction(data):
     return prediction
 
 def format_currency(amount):
-    if isinstance(amount, np.ndarray):
-        amount = amount.item()  # Extract numeric value from NumPy array
-    return f"€ {amount:,.2f}"
+    try:
+        # Check if prediction value is valid
+        if amount is None:
+            return "No prediction available"
+        
+        # Format prediction as currency
+        return f"€ {amount:,.2f}"
+    except Exception as e:
+        # Print error for debugging
+        print("An error occurred while formatting currency:", e)
+        return "Error formatting currency"
 
 def main():
     st.title('Immo Eliza Property Prediction Site')
