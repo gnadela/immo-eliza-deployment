@@ -9,6 +9,11 @@ model_file_path = "C:\\Users\\gnade\\OneDrive\\Desktop\\PythonProjects\\immo-eli
 print("File exists:", os.path.exists(model_file_path))
 print("Is a file:", os.path.isfile(model_file_path))
 
+print("Model file path:", model_file_path)
+print("File exists:", os.path.exists(model_file_path))
+print("Is a file:", os.path.isfile(model_file_path))
+
+
 def predict(data):
     try:    
         # Preprocess input data
