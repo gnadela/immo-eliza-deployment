@@ -13,6 +13,29 @@ print("Model file path:", model_file_path)
 print("File exists:", os.path.exists(model_file_path))
 print("Is a file:", os.path.isfile(model_file_path))
 
+with open(model_file_path, "rb") as f:
+        # Read the model
+        model = pickle.load(f)
+        
+def preprocess_input(data):
+    # Convert PropertyInput object to a dictionary
+    data_dict = data.dict()
+
+    # Convert the dictionary to a DataFrame
+    df = pd.DataFrame([data_dict])
+
+    # Make zip_code a categorical value
+    df['zip_code'] = df['zip_code'].astype('category')
+
+    # Define categorical columns
+    categorical_cols = ["property_type", "subproperty_type", "province", "locality", 
+                        "equipped_kitchen", "state_building", "epc", "heating_type", "zip_code"]
+
+    # Perform one-hot encoding for categorical variables
+    df_encoded = pd.get_dummies(df, columns=categorical_cols)
+
+    return df_encoded
+
 
 def predict(data):
     try:    
@@ -50,34 +73,6 @@ def predict(data):
         print("An error occurred during prediction:", e)
         sys.stdout.flush()  # Flush the output buffer
         return None
-    
-# Load the model if the file exists
-if os.path.exists(model_file_path) and os.path.isfile(model_file_path):
-    with open(model_file_path, "rb") as f:
-        # Read the model
-        model = pickle.load(f)
-        
-    def preprocess_input(data):
-        # Convert PropertyInput object to a dictionary
-        data_dict = data.dict()
-
-        # Convert the dictionary to a DataFrame
-        df = pd.DataFrame([data_dict])
-
-        # Make zip_code a categorical value
-        df['zip_code'] = df['zip_code'].astype('category')
-
-        # Define categorical columns
-        categorical_cols = ["property_type", "subproperty_type", "province", "locality", 
-                            "equipped_kitchen", "state_building", "epc", "heating_type", "zip_code"]
-
-        # Perform one-hot encoding for categorical variables
-        df_encoded = pd.get_dummies(df, columns=categorical_cols)
-
-        return df_encoded
-
-else:
-    print("Model file does not exist or is not a file.")
-    sys.stdout.flush()  # Flush the output buffer
+  
 
 
