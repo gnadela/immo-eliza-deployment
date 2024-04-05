@@ -1,6 +1,7 @@
 import pickle
 import pandas as pd
 import os
+import numpy as np
 import xgboost
 
 model_file_path = "C:\\Users\\gnade\\OneDrive\\Desktop\\PythonProjects\\immo-eliza-deployment\\streamlit\\trained_model.pkl"
