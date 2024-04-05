@@ -41,27 +41,26 @@ def predict(data):
     try:    
         # Preprocess input data
         input_data = preprocess_input(data)
-        print("Input data after preprocessing:")
-        print(input_data)
 
         # Get all possible feature names based on preprocessing
         all_features = model.get_booster().feature_names
-        print("All features:", all_features)
 
         # Ensure input data has all possible features, filling missing columns with zeros
         input_data_encoded = input_data.reindex(columns=all_features, fill_value=0)
-        print("Input data encoded with all features:")
-        print(input_data_encoded)
 
         # Make predictions
         prediction = model.predict(input_data_encoded)
-        print("Prediction:", prediction)
 
-        return prediction
-    
+        # Check if prediction is None or an empty array
+        if prediction is None or len(prediction) == 0:
+            return "No prediction available"
+
+        # Ensure prediction is a scalar value
+        prediction_scalar = prediction.item() if isinstance(prediction, np.ndarray) and prediction.size == 1 else prediction
+
+        return prediction_scalar
+
     except Exception as e:
         # Print the exception for debugging
-        print("An error occurred:", e)
+        print("An error occurred during prediction:", e)
         return None
-
-   
