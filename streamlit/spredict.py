@@ -2,13 +2,20 @@ import pickle
 import pandas as pd
 import os
 
-# Get the absolute path to the directory containing the current script
-current_dir = os.path.dirname(os.path.abspath(__file__))
-model_file_path = os.path.join(current_dir, "trained_model.pkl")
+model_file_path = "C:\\Users\\gnade\\OneDrive\\Desktop\\PythonProjects\\immo-eliza-deployment\\streamlit\\trained_model.pkl"
 
-# Load the trained model
-with open("trained_model.pkl", "rb") as f:
-    model = pickle.load(f)
+print("File exists:", os.path.exists(model_file_path))
+print("Is a file:", os.path.isfile(model_file_path))
+
+# Load the model if the file exists
+if os.path.exists(model_file_path) and os.path.isfile(model_file_path):
+    with open(model_file_path, "rb") as f:
+        # Read the model
+        # Your model loading code goes here
+        # Load the trained model
+        model = pickle.load(f)
+else:
+    print("Model file does not exist or is not a file.")
 
 def preprocess_input(data):
     # Convert PropertyInput object to a dictionary
