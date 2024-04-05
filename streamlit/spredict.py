@@ -1,6 +1,7 @@
 import pickle
 import pandas as pd
 import os
+import xgboost
 
 model_file_path = "C:\\Users\\gnade\\OneDrive\\Desktop\\PythonProjects\\immo-eliza-deployment\\streamlit\\trained_model.pkl"
 
@@ -37,17 +38,22 @@ def preprocess_input(data):
     return df_encoded
 
 def predict(data):
-    # Preprocess input data
-    input_data = preprocess_input(data)
+    try:    
+        # Preprocess input data
+        input_data = preprocess_input(data)
 
-    # Get all possible feature names based on preprocessing
-    all_features = model.get_booster().feature_names
+        # Get all possible feature names based on preprocessing
+        all_features = model.get_booster().feature_names
 
-    # Ensure input data has all possible features, filling missing columns with zeros
-    input_data_encoded = input_data.reindex(columns=all_features, fill_value=0)
+        # Ensure input data has all possible features, filling missing columns with zeros
+        input_data_encoded = input_data.reindex(columns=all_features, fill_value=0)
 
-    # Make predictions
-    prediction = model.predict(input_data_encoded)
+        # Make predictions
+        prediction = model.predict(input_data_encoded)
 
-    return prediction
-  
+        return prediction
+    
+    except Exception as e:
+            # Print the exception for debugging
+            print("An error occurred:", e)
+            return None
