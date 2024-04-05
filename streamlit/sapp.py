@@ -85,7 +85,9 @@ def main():
         try:
             # Call the function to get the prediction
             prediction = get_prediction(data)
+            print("Sapp prediction: ", prediction)
             formatted_prediction = format_currency(prediction)
+            print('formatted prediction: ', formatted_prediction)
             st.success(f'Price Prediction: {formatted_prediction}')
         except ConnectionError:
             st.error('Failed to connect to prediction service.')
