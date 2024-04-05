@@ -93,15 +93,12 @@ def predict(data):
         prediction = model.predict(input_data_encoded)
         print("Raw prediction:", prediction)
 
-        if prediction is None or len(prediction) == 0:
-            return "No prediction available"
-
         # Ensure prediction is a scalar value
         prediction_scalar = prediction.item() if isinstance(prediction, np.ndarray) and prediction.size == 1 else prediction
         print("Final prediction:", prediction_scalar)
 
         return prediction_scalar
-    
+        
     except Exception as e:
         # Print the exception for debugging
         print("An error occurred during prediction:", e)
